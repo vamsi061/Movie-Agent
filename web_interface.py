@@ -54,13 +54,16 @@ agent_manager = AgentManager()
 # Initialize LLM Chat Agent
 llm_chat_agent = None
 try:
-    # Try to initialize with API key
-    together_api_key = '4c5cffacdd859cda65379811c500fa703359c93e1ffdcce5fc1adc17eaaa578e'
-    if together_api_key:
+    # Get API key from config manager (which handles both config file and env vars)
+    from config_manager import config_manager
+    together_api_key = config_manager.get_together_api_key()
+    
+    if together_api_key and config_manager.is_together_api_enabled():
         llm_chat_agent = EnhancedLLMChatAgent(together_api_key)
-        logger.info("LLM Chat Agent initialized successfully")
+        logger.info("LLM Chat Agent initialized successfully with config manager")
     else:
-        logger.warning("TOGETHER_API_KEY not found. Chat features will be limited.")
+        logger.warning("Together API key not configured or not enabled. Use admin panel to configure.")
+        llm_chat_agent = None
 except Exception as e:
     logger.error(f"Failed to initialize LLM Chat Agent: {str(e)}")
     llm_chat_agent = None
