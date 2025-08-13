@@ -2293,6 +2293,10 @@ def chat_with_ai():
             session['session_id'] = user_session_id
             logger.info(f"Session expired, created new session: {user_session_id}")
         
+        # Refresh agents to ensure we're using the latest enabled agents
+        if llm_chat_agent:
+            llm_chat_agent.refresh_agents()
+        
         # Use enhanced movie request processing with session context
         if direct_search:
             # For direct searches (movie chip clicks), bypass LLM analysis and search directly

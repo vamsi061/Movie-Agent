@@ -718,7 +718,12 @@ REMEMBER: Always populate movie_titles array for any movie recommendation reques
         if not search_variations:
             search_variations = [search_query]
         
+        # Log which agents are currently enabled
+        enabled_agent_names = list(self.movie_agents.keys())
+        logger.info(f"Chat search using {len(enabled_agent_names)} enabled agents: {enabled_agent_names}")
+        
         if not self.movie_agents:
+            logger.warning("No movie search agents available for chat search")
             return {
                 "movies": [],
                 "search_summary": {
